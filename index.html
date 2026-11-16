@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Off-Grid Solar Battery Bank & Inverter Calculator — LiFePO4 & AGM (12V/24V/48V)</title>
+  <meta name="description" content="Calculate required battery bank Amp-Hours (Ah), LiFePO4 vs AGM capacity, solar panel array wattage, and pure sine wave inverter sizing for RVs, vans, and off-grid cabins.">
+  <link rel="canonical" href="https://sebiglesias.com.ar/solar-battery-calculator/">
+  <meta name="theme-color" content="#eab308">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Off-Grid Solar Battery Bank & Inverter Sizing Calculator">
+  <meta property="og:description" content="Size your off-grid battery bank (Ah), solar panel array (Watts), and inverter based on daily Wh load and LiFePO4 depth of discharge.">
+  <meta property="og:url" content="https://sebiglesias.com.ar/solar-battery-calculator/">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2BNDBQP0W7"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2BNDBQP0W7');
+  </script>
+
+  <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-3381238987477190">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3381238987477190" crossorigin="anonymous"></script>
+
+  <!-- JSON-LD Schema -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Off-Grid Solar Battery Bank Calculator",
+      "url": "https://sebiglesias.com.ar/solar-battery-calculator/",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "description": "Calculate Amp-Hour battery capacity, LiFePO4 depth of discharge, solar panel wattage, and inverter size for RV, van, and off-grid solar systems.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do you calculate how many Amp-Hours (Ah) of battery you need for solar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Divide your total daily Watt-hour (Wh) energy consumption by your system voltage (12V, 24V, or 48V) to get daily Amp-hours. Then multiply by your desired days of autonomy (cloudy days reserve) and divide by your battery's safe Depth of Discharge (0.85 for Lithium LiFePO4, or 0.50 for Lead-Acid AGM)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why is LiFePO4 Lithium superior to AGM or Lead-Acid for solar storage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Lithium Iron Phosphate (LiFePO4) allows 80% to 100% usable depth of discharge without degrading cycle life (lasting 3,000 to 5,000+ cycles). Traditional lead-acid AGM batteries permanently degrade if discharged past 50% capacity (lasting only 300 to 500 cycles). LiFePO4 is also 60% lighter and maintains steady voltage under heavy inverter loads."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many watts of solar panels do I need to recharge my battery bank?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Multiply your daily Watt-hour usage by 1.25 to account for real-world inverter, wiring, and charge controller losses. Then divide by your geographic average Peak Sun Hours (typically 4.0 to 5.0 hours in the US). For example, 1,500 Wh daily usage requires (1500 × 1.25) / 4.5 = 416 Watts of solar panels."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge">☀️ Off-Grid & Mobile Energy Architecture</div>
+      <h1>Solar Battery Bank & Inverter Calculator</h1>
+      <p class="subtitle">Calculate required Amp-Hours (Ah), LiFePO4 vs AGM usable storage, solar array wattage, and inverter size for RVs, camper vans, and off-grid cabins.</p>
+    </header>
+
+    <!-- AdSense Top Banner -->
+    <div style="text-align:center; margin: 16px 0;">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-3381238987477190"
+           data-ad-slot="auto"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <main class="calc-grid">
+      <!-- Inputs Card -->
+      <form class="card" id="solarForm" onsubmit="event.preventDefault();">
+        <h2>⚡ Power Consumption Profile</h2>
+
+        <div class="form-group">
+          <label for="dailyWh">
+            Daily Energy Consumption
+            <span class="hint">Total Watt-hours (Wh) used per 24 hours</span>
+          </label>
+          <div class="input-wrap">
+            <input type="number" id="dailyWh" step="50" min="100" value="1800" required>
+            <span class="input-suffix">Wh / day</span>
+          </div>
+          <div class="quick-presets">
+            <button type="button" class="preset-btn" data-wh="800">Weekend Van (800 Wh)</button>
+            <button type="button" class="preset-btn active" data-wh="1800">Starlink & Fridge (1.8 kWh)</button>
+            <button type="button" class="preset-btn" data-wh="3500">Full Off-Grid (3.5 kWh)</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Battery Chemistry & Usable Depth of Discharge (DoD)</label>
+          <div class="chem-toggle" role="radiogroup" aria-label="Battery Chemistry">
+            <label class="chem-btn active" id="chemLifepo4">
+              <input type="radio" name="chem" value="lifepo4" checked style="display:none;">
+              <span>LiFePO4 Lithium (85% DoD)</span>
+            </label>
+            <label class="chem-btn" id="chemAgm">
+              <input type="radio" name="chem" value="agm" style="display:none;">
+              <span>AGM / Lead-Acid (50% DoD)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="input-row">
+          <div class="form-group">
+            <label for="systemVolts">System DC Voltage</label>
+            <select id="systemVolts">
+              <option value="12" selected>12V DC (Standard RV / Van)</option>
+              <option value="24">24V DC (Medium Cabin / Large RV)</option>
+              <option value="48">48V DC (Whole Home / High Power)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="autonomyDays">Days of Autonomy (Reserve)</label>
+            <select id="autonomyDays">
+              <option value="1" selected>1 Day (Daily Sunlight)</option>
+              <option value="2">2 Days (1 Cloudy Day Reserve)</option>
+              <option value="3">3 Days (Storm / Heavy Cloud)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="sunHours">
+            Average Peak Sun Hours (PSH)
+            <span class="hint">US Continental average is 4.0 to 5.0 hours</span>
+          </label>
+          <div class="input-wrap">
+            <input type="number" id="sunHours" step="0.5" min="2" max="8" value="4.5">
+            <span class="input-suffix">hours</span>
+          </div>
+        </div>
+      </form>
+
+      <!-- Results Card -->
+      <div class="card">
+        <h2>🔋 Battery Bank & System Sizing</h2>
+
+        <div class="result-hero">
+          <div class="result-label">Recommended Battery Bank</div>
+          <div class="result-number" id="batteryAh">176</div>
+          <div class="result-label" style="color:#ffffff;" id="ahSuffix">Amp-Hours (Ah) @ 12V</div>
+          <div style="font-size:0.95rem; color:#fef08a; margin-top:6px;" id="batteryConfigText">≈ 2× 12V 100Ah LiFePO4 in Parallel (2.11 kWh)</div>
+        </div>
+
+        <div class="solar-breakdown">
+          <div class="solar-col">
+            <div class="solar-label">Solar Panel Array</div>
+            <div class="solar-val" id="solarWatts">500 Watts</div>
+            <div class="solar-sub" id="solarPanelsText">5× 100W or 2× 250W Panels</div>
+          </div>
+          <div class="solar-col">
+            <div class="solar-label">Pure Sine Wave Inverter</div>
+            <div class="solar-val" id="inverterSize">2000 Watts</div>
+            <div class="solar-sub">4000W Surge Capacity</div>
+          </div>
+        </div>
+
+        <div class="specs-grid">
+          <div class="spec-item">
+            <div class="spec-desc">Total Gross Capacity</div>
+            <div class="spec-val" id="grossKwh">2.12 kWh</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-desc">MPPT Charge Controller</div>
+            <div class="spec-val" id="mpptAmps">40 Amp MPPT</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-desc">Cycle Lifespan</div>
+            <div class="spec-val" id="lifespanVal" style="color:#4ade80;">3,500–5,000 Cycles (10+ Yrs)</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-desc">Estimated Battery Weight</div>
+            <div class="spec-val" id="estWeight">≈ 48 lbs (LiFePO4)</div>
+          </div>
+        </div>
+
+        <div style="background:#1e293b; border:1px solid #334155; border-radius:8px; padding:12px; margin-top:16px; font-size:0.82rem; color:#cbd5e1;">
+          💡 <strong>Voltage Efficiency Tip:</strong> Systems over 2,000W of continuous load should operate at <strong>24V or 48V</strong> to halve cable thickness and reduce resistive heating loss through heavy-gauge copper wiring.
+        </div>
+      </div>
+    </main>
+
+    <!-- Amazon Solar & Battery Kits -->
+    <section class="supplies-card">
+      <h3>⚡ Recommended LiFePO4 Batteries, Solar Panels & MPPT Hardware</h3>
+      <div class="supplies-grid">
+        <div class="supply-item">
+          <div>
+            <div class="supply-title">LiTime / Renogy 12V 100Ah LiFePO4 Deep Cycle Battery</div>
+            <div class="supply-desc">Grade-A prismatic cells with built-in 100A BMS, low-temp cut-off, and 4,000+ deep cycles.</div>
+          </div>
+          <a href="https://www.amazon.com/s?k=12v+100ah+lifepo4+lithium+battery+bms&tag=sebiglesias-20" target="_blank" rel="nofollow noopener" class="btn-amazon">Check on Amazon →</a>
+        </div>
+        <div class="supply-item">
+          <div>
+            <div class="supply-title">Victron SmartSolar MPPT Charge Controller (100V / 30A or 50A)</div>
+            <div class="supply-desc">Industry-standard ultra-fast MPPT tracking with built-in Bluetooth monitoring for iOS and Android.</div>
+          </div>
+          <a href="https://www.amazon.com/s?k=victron+energy+smartsolar+mppt+charge+controller&tag=sebiglesias-20" target="_blank" rel="nofollow noopener" class="btn-amazon">Check on Amazon →</a>
+        </div>
+        <div class="supply-item">
+          <div>
+            <div class="supply-title">Renogy 200 Watt 12 Volt Monocrystalline Solar Panel</div>
+            <div class="supply-desc">High-efficiency PERC solar cells with corrosion-resistant aluminum frame for roof or ground mount.</div>
+          </div>
+          <a href="https://www.amazon.com/s?k=renogy+200w+monocrystalline+solar+panel+12v&tag=sebiglesias-20" target="_blank" rel="nofollow noopener" class="btn-amazon">Check on Amazon →</a>
+        </div>
+        <div class="supply-item">
+          <div>
+            <div class="supply-title">2000W Pure Sine Wave Power Inverter (12V to 120V AC)</div>
+            <div class="supply-desc">Clean, low-distortion AC power for sensitive electronics, laptops, Starlink, and kitchen appliances.</div>
+          </div>
+          <a href="https://www.amazon.com/s?k=2000w+pure+sine+wave+inverter+12v+to+120v&tag=sebiglesias-20" target="_blank" rel="nofollow noopener" class="btn-amazon">Check on Amazon →</a>
+        </div>
+      </div>
+      <p style="font-size:0.75rem; color:#94a3b8; margin-top:14px; margin-bottom:0; text-align:center;">
+        ⚖️ <em>Affiliate Notice: As an Amazon Associate, this site earns from qualifying purchases at no additional cost to you. We strictly link to certified lithium batteries, MPPT controllers, and solar energy equipment.</em>
+      </p>
+    </section>
+
+    <!-- FAQ Section for SEO -->
+    <section class="faq-section">
+      <h2 style="font-size:1.35rem; color:#ffffff; margin-bottom:16px;">Off-Grid Solar Battery FAQ</h2>
+      <div class="faq-item">
+        <div class="faq-q">What is the difference between PWM and MPPT charge controllers?</div>
+        <div class="faq-a">PWM (Pulse Width Modulation) controllers act as basic electronic switches between the panels and battery, forcing the solar panels down to the battery's voltage and wasting up to 30% of potential solar energy. MPPT (Maximum Power Point Tracking) controllers dynamically convert excess voltage into higher charging amperage, providing up to 98% efficiency, especially in cold weather and cloudy conditions.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Why should I avoid discharging lead-acid AGM batteries below 50%?</div>
+        <div class="faq-a">Lead-acid batteries generate lead sulfate crystals during discharge. If discharged below 50%, the chemical sulfation becomes irreversible, coating the lead plates, permanently reducing capacity, and degrading the battery from 1,000 potential cycles down to fewer than 200. LiFePO4 batteries suffer no sulfation and can be routinely discharged to 85%–90% without harm.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Why is a Pure Sine Wave inverter necessary over a Modified Sine Wave?</div>
+        <div class="faq-a">A Pure Sine Wave inverter produces clean, smooth alternating current identical to grid power. Modified sine wave inverters produce a blocky, choppy square waveform that creates electromagnetic buzzing, overheats electric induction motors (refrigerators, blenders), and can permanently damage modern laptop chargers, Starlink terminals, and medical CPAP machines.</div>
+      </div>
+    </section>
+
+    <!-- Bottom AdSense Banner -->
+    <div style="text-align:center; margin: 32px 0;">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-3381238987477190"
+           data-ad-slot="auto"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <footer>
+      <p>© 2026 <a href="https://sebiglesias.com.ar/">sebiglesias.com.ar</a> · Solar Battery Bank & Inverter Sizing Calculator. Educational reference tool.</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

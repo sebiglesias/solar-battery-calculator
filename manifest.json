@@ -1,0 +1,15 @@
+{
+  "name": "Off-Grid Solar Battery Bank Calculator",
+  "short_name": "Solar Battery",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#090e17",
+  "theme_color": "#eab308",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
